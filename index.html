@@ -3,82 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Africa Social Media Analytics Dashboard</title>
+    <title>Africa Social Media Analytics Dashboard - Fully Interactive V3</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <style>
-        @media print {
-            .no-print { display: none !important; }
-            body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-        }
+        @media print { .no-print { display: none !important; } body { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
         .chart-container { position: relative; height: 300px; width: 100%; }
         .kpi-card { transition: all 0.3s ease; }
         .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-        .filter-active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        /* Dark Mode styles */
-        .dark .bg-white { background-color: #1f2937; } /* gray-800 */
-        .dark .text-gray-900 { color: #f9fafb; } /* gray-50 */
-        .dark .text-gray-800 { color: #f9fafb; }
-        .dark .text-gray-600 { color: #d1d5db; } /* gray-300 */
-        .dark .text-gray-500 { color: #9ca3af; } /* gray-400 */
-        .dark .bg-gray-50 { background-color: #111827; } /* gray-900 */
-        .dark .border-gray-200 { border-color: #374151; } /* gray-700 */
-        .dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; } /* gray-700 */
-        .dark .bg-gray-50 { background-color: #374151; } /* gray-700 for table head */
-        .dark .hover\:bg-gray-50:hover { background-color: #374151; } /* gray-700 */
-        .dark select { background-color: #374151; border-color: #4b5563; color: white; }
-        .dark h1, .dark h2, .dark h3 { color: white; }
-        .dark .text-blue-100 { color: #dbeafe; }
+        /* Dark Mode Styles */
+        .dark .bg-white { background-color: #1f2937; }
+        .dark .text-gray-900 { color: #f9fafb; }
+        .dark .text-gray-800 { color: #f3f4f6; }
+        .dark .text-gray-700 { color: #d1d5db; }
+        .dark .text-gray-600 { color: #9ca3af; }
         .dark .text-gray-500 { color: #6b7280; }
-        .dark .text-gray-400 { color: #9ca3af; }
+        .dark body.bg-gray-50 { background-color: #111827; }
+        .dark thead.bg-gray-50 { background-color: #374151 !important; }
+        .dark .border-gray-200 { border-color: #374151; }
+        .dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+        .dark .hover\:bg-gray-100:hover { background-color: #4b5563; }
+        .dark select { background-color: #374151; border-color: #4b5563; color: #f9fafb; }
+        .dark h1, .dark h2, .dark h3, .dark .text-lg.font-bold { color: #f9fafb; }
+        .dark .text-blue-100 { color: #dbeafe; }
+        .dark ::-webkit-calendar-picker-indicator { filter: invert(1); }
+        /* Add orange text colors for the new card */
+        .text-orange-100 { color: #ffedd5; }
+        .text-orange-200 { color: #fed7aa; }
+        /* Define Amber Colors for Tailwind */
+        .from-amber-500 { --tw-gradient-from: #f59e0b; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(245, 158, 11, 0)); }
+        .to-amber-600 { --tw-gradient-to: #d97706; }
+        .text-amber-100 { color: #fffbeb; }
+        .text-amber-200 { color: #fef3c7; }
+
     </style>
 </head>
-<body class="bg-gray-50 font-sans dark:bg-gray-900">
+<body class="bg-gray-50 font-sans dark:bg-gray-900 dark:text-gray-100">
     <div class="container mx-auto p-6 space-y-6">
         <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg shadow-lg relative">
             <h1 class="text-3xl font-bold mb-2"><i class="fas fa-chart-line mr-3"></i>Africa Social Media Analytics Dashboard</h1>
             <p class="text-blue-100">Comprehensive analysis of social media trends, user behavior patterns, and platform engagement across African countries</p>
-            <button id="darkModeToggle" class="absolute top-6 right-6 p-2 rounded-full bg-gray-700 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-500 text-white focus:outline-none no-print">
+            <button id="darkModeToggle" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full bg-gray-700 hover:bg-gray-600 text-white focus:outline-none no-print transition-colors duration-200">
                 <i class="fas fa-moon"></i>
             </button>
         </div>
 
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold mb-4 dark:text-white"><i class="fas fa-filter mr-2"></i>Filters & Controls</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <h2 class="text-xl font-bold mb-4"><i class="fas fa-filter mr-2"></i>Filters & Controls</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2 dark:text-gray-300">Country</label>
-                    <select id="countryFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-600">
+                    <label for="countryFilter" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Country</label>
+                    <select id="countryFilter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600">
                         <option value="all">All Countries</option>
-                        <option value="south-africa">South Africa</option>
-                        <option value="nigeria">Nigeria</option>
-                        <option value="kenya">Kenya</option>
-                        <option value="ghana">Ghana</option>
+                        <option value="South Africa">South Africa</option>
+                        <option value="Nigeria">Nigeria</option>
+                        <option value="Kenya">Kenya</option>
+                        <option value="Ghana">Ghana</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2 dark:text-gray-300">Platform</label>
-                    <select id="platformFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-600">
+                    <label for="platformFilter" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Platform</label>
+                    <select id="platformFilter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600">
                         <option value="all">All Platforms</option>
-                        <option value="whatsapp">WhatsApp</option>
-                        <option value="facebook">Facebook</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="instagram">Instagram</option>
-                        <option value="youtube">YouTube</option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="TikTok">TikTok</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="YouTube">YouTube</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2 dark:text-gray-300">Date Range</label>
-                    <select id="dateFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-600">
+                    <label for="dateFilter" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Year</label>
+                    <select id="dateFilter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600">
+                        <option value="all">All Years</option>
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
                         <option value="2022">2022</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2 dark:text-gray-300">Demographics</label>
-                    <select id="demoFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-600">
+                    <label for="demoFilter" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Demographics (Age)</label>
+                    <select id="demoFilter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600">
                         <option value="all">All Demographics</option>
                         <option value="18-24">18-24 years</option>
                         <option value="25-34">25-34 years</option>
@@ -94,327 +101,248 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-blue-100 text-sm">Total Users</p>
-                        <p class="text-3xl font-bold" id="totalUsers">60.2M</p>
-                        <p class="text-blue-200 text-sm"><i class="fas fa-arrow-up mr-1"></i>+12.3% YoY</p>
+                        <p class="text-3xl font-bold" id="totalUsers">-- M</p>
+                        <p class="text-blue-200 text-sm" id="totalUsersChange"><i class="fas fa-minus mr-1"></i>--% YoY</p>
                     </div>
-                    <i class="fas fa-users text-4xl text-blue-200"></i>
+                    <i class="fas fa-users text-4xl text-blue-200 opacity-80"></i>
                 </div>
             </div>
-            
             <div class="kpi-card bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-green-100 text-sm">Avg Daily Usage</p>
-                        <p class="text-3xl font-bold" id="avgUsage">3h 24m</p>
-                        <p class="text-green-200 text-sm"><i class="fas fa-arrow-up mr-1"></i>Above Global Avg</p>
+                        <p class="text-3xl font-bold" id="avgUsage">--h --m</p>
+                        <p class="text-green-200 text-sm" id="avgUsageChange"><i class="fas fa-minus mr-1"></i>vs Global Avg</p>
                     </div>
-                    <i class="fas fa-clock text-4xl text-green-200"></i>
+                    <i class="fas fa-clock text-4xl text-green-200 opacity-80"></i>
                 </div>
             </div>
-            
             <div class="kpi-card bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow-lg">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-purple-100 text-sm">Engagement Rate</p>
-                        <p class="text-3xl font-bold" id="engagementRate">68.4%</p>
-                        <p class="text-purple-200 text-sm"><i class="fas fa-arrow-up mr-1"></i>+5.2% QoQ</p>
+                        <p class="text-3xl font-bold" id="engagementRate">--.-%</p>
+                        <p class="text-purple-200 text-sm" id="engagementRateChange"><i class="fas fa-minus mr-1"></i>--% QoQ</p>
                     </div>
-                    <i class="fas fa-heart text-4xl text-purple-200"></i>
+                    <i class="fas fa-heart text-4xl text-purple-200 opacity-80"></i>
                 </div>
             </div>
-            
-            <div class="kpi-card bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border dark:border-gray-700">
+            <div class="kpi-card bg-gradient-to-br from-amber-500 to-amber-600 text-white p-6 rounded-lg shadow-lg">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">Post Frequency</p>
-                        <p class="text-3xl font-bold text-gray-900 dark:text-white" id="postFreq">8.7/day</p>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm"><i class="fas fa-arrow-up mr-1"></i>+15.6% MoM</p>
+                        <p class="text-amber-100 text-sm">Post Frequency</p>
+                        <p class="text-3xl font-bold" id="postFreq">--/day</p>
+                        <p class="text-amber-200 text-sm" id="postFreqChange"><i class="fas fa-minus mr-1"></i>--% MoM</p>
                     </div>
-                    <i class="fas fa-share-alt text-4xl text-gray-400 dark:text-gray-500"></i>
+                    <i class="fas fa-share-alt text-4xl text-amber-200 opacity-80"></i>
                 </div>
             </div>
-        </div>
+            </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-chart-pie mr-2"></i>Platform Distribution by Users</h3>
-                <div class="chart-container">
-                    <canvas id="platformChart"></canvas>
-                </div>
-            </div>
-            
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-globe-africa mr-2"></i>Daily Usage Time by Country</h3>
-                <div class="chart-container">
-                    <canvas id="usageChart"></canvas>
-                </div>
-            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"><h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white"><i class="fas fa-chart-pie mr-2"></i>Platform Distribution</h3><div class="chart-container"><canvas id="platformChart"></canvas></div></div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"><h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white"><i class="fas fa-globe-africa mr-2"></i>Usage by Country</h3><div class="chart-container"><canvas id="usageChart"></canvas></div></div>
         </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-chart-line mr-2"></i>Platform Growth Over Time</h3>
-                <div class="chart-container">
-                    <canvas id="growthChart"></canvas>
-                </div>
-            </div>
-            
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-chart-donut mr-2"></i>Content Type Engagement</h3>
-                <div class="chart-container">
-                    <canvas id="contentChart"></canvas>
-                </div>
-            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"><h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white"><i class="fas fa-chart-line mr-2"></i>User Growth</h3><div class="chart-container"><canvas id="growthChart"></canvas></div></div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"><h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white"><i class="fas fa-chart-donut mr-2"></i>Content Engagement</h3><div class="chart-container"><canvas id="contentChart"></canvas></div></div>
         </div>
-
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-calendar-alt mr-2"></i>Most Active Posting Hours by Day</h3>
-            <div class="grid grid-cols-24 gap-1 mb-4">
-                <div class="text-xs text-center col-span-24 grid grid-cols-24 gap-1 mb-2">
-                    <span class="text-gray-500 dark:text-gray-400">0</span><span></span><span></span><span class="text-gray-500 dark:text-gray-400">3</span><span></span><span></span>
-                    <span class="text-gray-500 dark:text-gray-400">6</span><span></span><span></span><span class="text-gray-500 dark:text-gray-400">9</span><span></span><span></span>
-                    <span class="text-gray-500 dark:text-gray-400">12</span><span></span><span></span><span class="text-gray-500 dark:text-gray-400">15</span><span></span><span></span>
-                    <span class="text-gray-500 dark:text-gray-400">18</span><span></span><span></span><span class="text-gray-500 dark:text-gray-400">21</span><span></span><span></span>
-                </div>
-            </div>
-            <div class="space-y-1">
-                <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Mon</span>
-                    <div class="flex gap-1" id="mondayHours"></div>
-                </div>
-                <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Tue</span>
-                    <div class="flex gap-1" id="tuesdayHours"></div>
-                </div>
-                <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Wed</span>
-                    <div class="flex gap-1" id="wednesdayHours"></div>
-                </div>
-                <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Thu</span>
-                    <div class="flex gap-1" id="thursdayHours"></div>
-                </div>
-                <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Fri</span>
-                    <div class="flex gap-1" id="fridayHours"></div>
-                </div>
-                <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Sat</span>
-                    <div class="flex gap-1" id="saturdayHours"></div>
-                </div>
-                <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Sun</span>
-                    <div class="flex gap-1" id="sundayHours"></div>
-                </div>
-            </div>
-            <div class="flex items-center justify-center mt-4 space-x-4">
-                <span class="text-sm text-gray-600 dark:text-gray-300">Low</span>
-                <div class="flex space-x-1">
-                    <div class="w-3 h-3 bg-green-100 rounded"></div>
-                    <div class="w-3 h-3 bg-green-200 rounded"></div>
-                    <div class="w-3 h-3 bg-green-400 rounded"></div>
-                    <div class="w-3 h-3 bg-green-600 rounded"></div>
-                    <div class="w-3 h-3 bg-green-800 rounded"></div>
-                </div>
-                <span class="text-sm text-gray-600 dark:text-gray-300">High</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-users mr-2"></i>Gender Distribution</h3>
-                <div class="chart-container">
-                    <canvas id="genderChart"></canvas>
-                </div>
-            </div>
-            
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-birthday-cake mr-2"></i>Age Groups</h3>
-                <div class="chart-container">
-                    <canvas id="ageChart"></canvas>
-                </div>
-            </div>
-            
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-city mr-2"></i>Urban vs Rural</h3>
-                <div class="chart-container">
-                    <canvas id="urbanChart"></canvas>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"><h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white"><i class="fas fa-users mr-2"></i>Gender Distribution</h3><div class="chart-container"><canvas id="genderChart"></canvas></div></div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"><h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white"><i class="fas fa-birthday-cake mr-2"></i>Age Groups</h3><div class="chart-container"><canvas id="ageChart"></canvas></div></div>
         </div>
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 border-b dark:border-gray-700">
-                <h3 class="text-lg font-bold dark:text-white"><i class="fas fa-table mr-2"></i>Country Comparison Summary</h3>
-            </div>
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700"><h3 class="text-lg font-bold text-gray-800 dark:text-white"><i class="fas fa-table mr-2"></i>Filtered Summary (Top 5 Rows)</h3></div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th class="p-4 text-left dark:text-gray-300">Country</th>
-                            <th class="p-4 text-left dark:text-gray-300">Total Users</th>
-                            <th class="p-4 text-left dark:text-gray-300">Penetration Rate</th>
-                            <th class="p-4 text-left dark:text-gray-300">Daily Usage</th>
-                            <th class="p-4 text-left dark:text-gray-300">Top Platform</th>
-                            <th class="p-4 text-left dark:text-gray-300">Growth Rate</th>
+                            <th class="p-4 text-left text-gray-600 dark:text-gray-300">Country</th>
+                            <th class="p-4 text-left text-gray-600 dark:text-gray-300">Platform</th>
+                            <th class="p-4 text-left text-gray-600 dark:text-gray-300">Year</th>
+                            <th class="p-4 text-left text-gray-600 dark:text-gray-300">Age</th>
+                            <th class="p-4 text-left text-gray-600 dark:text-gray-300">Users (M)</th>
+                            <th class="p-4 text-left text-gray-600 dark:text-gray-300">Usage (Min)</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="p-4 font-medium dark:text-white">🇿🇦 South Africa</td>
-                            <td class="p-4 dark:text-white">26.7M</td>
-                            <td class="p-4 dark:text-white">59.9%</td>
-                            <td class="p-4 dark:text-white">3h 36m</td>
-                            <td class="p-4 dark:text-white">WhatsApp (93.8%)</td>
-                            <td class="p-4 text-green-600 dark:text-green-400">+2.7%</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="p-4 font-medium dark:text-white">🇳🇬 Nigeria</td>
-                            <td class="p-4 dark:text-white">33.7M</td>
-                            <td class="p-4 dark:text-white">15.9%</td>
-                            <td class="p-4 dark:text-white">3h 23m</td>
-                            <td class="p-4 dark:text-white">WhatsApp</td>
-                            <td class="p-4 text-green-600 dark:text-green-400">+8.1%</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="p-4 font-medium dark:text-white">🇰🇪 Kenya</td>
-                            <td class="p-4 dark:text-white">13.05M</td>
-                            <td class="p-4 dark:text-white">23.5%</td>
-                            <td class="p-4 dark:text-white">4h 12m</td>
-                            <td class="p-4 dark:text-white">Facebook</td>
-                            <td class="p-4 text-green-600 dark:text-green-400">+38.2%</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="p-4 font-medium dark:text-white">🇬🇭 Ghana</td>
-                            <td class="p-4 dark:text-white">7.4M</td>
-                            <td class="p-4 dark:text-white">21.5%</td>
-                            <td class="p-4 dark:text-white">2h 45m</td>
-                            <td class="p-4 dark:text-white">WhatsApp (93%)</td>
-                            <td class="p-4 text-green-600 dark:text-green-400">+31.0%</td>
-                        </tr>
+                    <tbody id="summaryTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                       <tr><td colspan="6" class="p-4 text-center text-gray-500">Select filters to see data...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8">
-            <p>Data sources: Meltwater Global Digital Report 2024/2025, DataReportal, Statista | Last updated: 2024</p>
-        </div>
+        <div class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8"><p>Data sources: Simulated Data | Last updated: 2024</p></div>
     </div>
 
     <script>
+        // --- Global Variables ---
         const darkModeToggle = document.getElementById('darkModeToggle');
         const htmlElement = document.documentElement;
-        const charts = {}; // Object to store chart instances
+        const charts = {};
 
-        // Set initial Chart.js default color
-        function setChartDefaults(isDark) {
-            Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
-            Chart.defaults.color = isDark ? '#FFF' : '#374151';
-        }
+        // --- Simulated Base Data ---
+        const baseData = [];
+        const countries = ['South Africa', 'Nigeria', 'Kenya', 'Ghana'];
+        const platforms = ['WhatsApp', 'Facebook', 'TikTok', 'Instagram', 'YouTube'];
+        const years = [2022, 2023, 2024];
+        const ageGroups = ['18-24', '25-34', '35-44', '45+'];
+        const genders = ['Male', 'Female'];
+        const contentTypes = ['Videos', 'Images', 'Stories', 'Live', 'Text'];
 
-        // Data (same as before)
-        const platformData = { labels: ['WhatsApp', 'Facebook', 'TikTok', 'Instagram', 'YouTube', 'LinkedIn'], datasets: [{ data: [93.8, 88.6, 76.9, 71.4, 68.2, 35.5], backgroundColor: ['#25D366', '#1877F2', '#000000', '#E4405F', '#FF0000', '#0A66C2'], borderWidth: 0 }] };
-        const usageData = { labels: ['Kenya', 'South Africa', 'Nigeria', 'Ghana', 'Morocco'], datasets: [{ data: [252, 216, 203, 165, 158], backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'], borderWidth: 0 }] };
-        const growthData = { labels: ['Jan 2023', 'Apr 2023', 'Jul 2023', 'Oct 2023', 'Jan 2024', 'Mar 2024'], datasets: [ { label: 'Facebook', data: [45.2, 48.1, 52.3, 58.7, 67.2, 88.6], borderColor: '#1877F2', backgroundColor: 'rgba(24, 119, 242, 0.1)', tension: 0.4 }, { label: 'TikTok', data: [12.8, 18.3, 28.9, 45.6, 63.4, 76.9], borderColor: '#000000', backgroundColor: 'rgba(0, 0, 0, 0.1)', tension: 0.4 }, { label: 'Instagram', data: [35.4, 38.7, 42.1, 48.9, 58.3, 71.4], borderColor: '#E4405F', backgroundColor: 'rgba(228, 64, 95, 0.1)', tension: 0.4 } ] };
-        const contentData = { labels: ['Videos', 'Images', 'Stories', 'Live Streams', 'Text Posts'], datasets: [{ data: [42.3, 28.7, 18.9, 6.8, 3.3], backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'], borderWidth: 0 }] };
-        const genderData = { labels: ['Female', 'Male'], datasets: [{ data: [48.7, 51.3], backgroundColor: ['#FF69B4', '#4169E1'], borderWidth: 0 }] };
-        const ageData = { labels: ['18-24', '25-34', '35-44', '45-54', '55+'], datasets: [{ data: [32.4, 28.9, 21.7, 12.3, 4.7], backgroundColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'], borderWidth: 0 }] };
-        const urbanData = { labels: ['Urban', 'Rural'], datasets: [{ data: [67.3, 32.7], backgroundColor: ['#2ECC71', '#F39C12'], borderWidth: 0 }] };
+        countries.forEach(country => {
+            platforms.forEach(platform => {
+                years.forEach(year => {
+                    ageGroups.forEach(age => {
+                        genders.forEach(gender => {
+                            const baseUsers = (countries.indexOf(country) + 1) * (platforms.indexOf(platform) + 1) * (Math.random() * 0.5 + 0.5);
+                            const userCount = parseFloat((baseUsers * (ageGroups.indexOf(age) < 2 ? 1.5 : 0.8) * (year - 2021)).toFixed(2));
+                            const usage = 120 + Math.random() * 150 + (platforms.indexOf(platform) * 10);
+                            const engagement = 50 + Math.random() * 45;
+                            const postFrequency = 0.5 + Math.random() * 5 + (platforms.indexOf(platform) * 0.5);
+                            const contentPrefs = { Videos: Math.random(), Images: Math.random(), Stories: Math.random(), Live: Math.random(), Text: Math.random() };
 
-        // Common Chart Options
-        const commonOptions = (isDark) => ({
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        usePointStyle: true,
-                        color: isDark ? '#FFF' : '#374151'
-                    }
-                }
-            }
+                            if (userCount > 0.5) {
+                                baseData.push({
+                                    country: country, platform: platform, year: year, age: age, gender: gender,
+                                    users: userCount, usage: Math.round(usage), engagement: parseFloat(engagement.toFixed(1)),
+                                    postFrequency: parseFloat(postFrequency.toFixed(1)),
+                                    content: contentPrefs
+                                });
+                            }
+                        });
+                    });
+                });
+            });
         });
+        console.log(`Generated ${baseData.length} mock data points.`);
 
-        // Function to initialize charts
-        function initializeCharts(isDark) {
-            setChartDefaults(isDark);
-            const opts = commonOptions(isDark);
+        // --- Chart & Dark Mode Utils (No Changes Needed) ---
+        function setChartDefaults(isDark) { Chart.defaults.font.family = 'Inter, system-ui, -apple-system, sans-serif'; Chart.defaults.color = isDark ? '#e5e7eb' : '#374151'; Chart.defaults.borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'; }
+        const commonChartOptions = (isDark) => ({ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, color: isDark ? '#d1d5db' : '#4b5563' } }, tooltip: { backgroundColor: isDark ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)', titleColor: isDark ? '#f3f4f6' : '#1f2937', bodyColor: isDark ? '#d1d5db' : '#374151', borderColor: isDark ? '#4b5563' : '#e5e7eb', borderWidth: 1 } }, scales: { x: { ticks: { color: isDark ? '#9ca3af' : '#6b7280' }, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }, y: { ticks: { color: isDark ? '#9ca3af' : '#6b7280' }, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }, r: { ticks: { color: isDark ? '#9ca3af' : '#6b7280', backdropColor: 'transparent' }, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, angleLines: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, pointLabels: { color: isDark ? '#d1d5db' : '#4b5563' } } } });
+        function initializeCharts(isDark) { setChartDefaults(isDark); const opts = commonChartOptions(isDark); Object.values(charts).forEach(chart => chart.destroy && chart.destroy()); charts.platform = new Chart(document.getElementById('platformChart'), { type: 'doughnut', data: { labels: [], datasets: [{ data: [], backgroundColor: ['#25D366', '#1877F2', '#000000', '#E4405F', '#FF0000', '#0A66C2'], borderWidth: 0 }] }, options: opts }); charts.usage = new Chart(document.getElementById('usageChart'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Avg Usage (Min)', data: [], backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'], borderWidth: 0 }] }, options: opts }); charts.growth = new Chart(document.getElementById('growthChart'), { type: 'line', data: { labels: [], datasets: [{ label: 'Total Users (M)', data: [], borderColor: '#1877F2', tension: 0.1, fill: false }] }, options: opts }); charts.content = new Chart(document.getElementById('contentChart'), { type: 'pie', data: { labels: [], datasets: [{ data: [], backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'], borderWidth: 0 }] }, options: opts }); charts.gender = new Chart(document.getElementById('genderChart'), { type: 'doughnut', data: { labels: ['Male', 'Female'], datasets: [{ data: [], backgroundColor: ['#4169E1', '#FF69B4'], borderWidth: 0 }] }, options: opts }); charts.age = new Chart(document.getElementById('ageChart'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Users (M)', data: [], backgroundColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'], borderWidth: 0 }] }, options: opts }); }
 
-            // Destroy existing charts if they exist
-            Object.values(charts).forEach(chart => chart.destroy());
-
-            charts.platform = new Chart(document.getElementById('platformChart'), { type: 'doughnut', data: platformData, options: { ...opts, plugins: { ...opts.plugins, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed}%` } } } } });
-            charts.usage = new Chart(document.getElementById('usageChart'), { type: 'polarArea', data: usageData, options: { ...opts, plugins: { ...opts.plugins, tooltip: { callbacks: { label: (c) => `${c.label}: ${Math.floor(c.parsed.r / 60)}h ${c.parsed.r % 60}m` } } } } });
-            charts.growth = new Chart(document.getElementById('growthChart'), { type: 'line', data: growthData, options: { ...opts, scales: { y: { beginAtZero: true, ticks: { callback: (v) => `${v}%`, color: isDark ? '#FFF' : '#374151' }, grid: { color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' } }, x: { ticks: { color: isDark ? '#FFF' : '#374151' }, grid: { color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' } } } } });
-            charts.content = new Chart(document.getElementById('contentChart'), { type: 'pie', data: contentData, options: { ...opts, plugins: { ...opts.plugins, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed}%` } } } } });
-            charts.gender = new Chart(document.getElementById('genderChart'), { type: 'doughnut', data: genderData, options: opts });
-            charts.age = new Chart(document.getElementById('ageChart'), { type: 'doughnut', data: ageData, options: opts });
-            charts.urban = new Chart(document.getElementById('urbanChart'), { type: 'doughnut', data: urbanData, options: opts });
-        }
-
-
-        // Generate activity heatmap
-        function generateHeatmap() {
-            const days = ['mondayHours', 'tuesdayHours', 'wednesdayHours', 'thursdayHours', 'fridayHours', 'saturdayHours', 'sundayHours'];
-            const intensities = [ [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], [1,1,1,1,1,2,3,4,4,4,3,3,4,4,3,3,4,5,5,5,4,3,2,1], [1,1,1,1,1,1,2,3,4,4,4,4,4,4,4,4,5,5,5,5,4,3,2,1], [1,1,1,1,1,1,2,3,4,4,4,4,4,4,4,4,5,5,5,5,4,3,2,1] ];
-            days.forEach((dayId, dayIndex) => {
-                const container = document.getElementById(dayId);
-                container.innerHTML = '';
-                for (let hour = 0; hour < 24; hour++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'w-3 h-3 rounded cursor-pointer';
-                    const intensity = intensities[dayIndex][hour];
-                    switch(intensity) {
-                        case 1: cell.classList.add('bg-green-100'); break;
-                        case 2: cell.classList.add('bg-green-200'); break;
-                        case 3: cell.classList.add('bg-green-400'); break;
-                        case 4: cell.classList.add('bg-green-600'); break;
-                        case 5: cell.classList.add('bg-green-800'); break;
-                    }
-                    cell.title = `${hour}:00 - Activity level: ${intensity}/5`; // Fixed template literal
-                    container.appendChild(cell);
-                }
+        // --- Filtering and Aggregation ---
+        function filterData(data, filters) {
+            return data.filter(item => {
+                const countryMatch = filters.country === 'all' || item.country === filters.country;
+                const platformMatch = filters.platform === 'all' || item.platform === filters.platform;
+                const yearMatch = filters.year === 'all' || item.year.toString() === filters.year;
+                const ageMatch = filters.age === 'all' || item.age === filters.age;
+                return countryMatch && platformMatch && yearMatch && ageMatch;
             });
         }
 
-        // Filter functionality (same as before)
-        function updateDashboard() { /* ... existing code ... */ }
+        function aggregateData(filteredData) {
+            if (filteredData.length === 0) return null;
 
-        // Dark Mode Logic
-        function applyDarkMode(isDark) {
-            if (isDark) {
-                htmlElement.classList.add('dark');
-                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.theme = 'dark';
-            } else {
-                htmlElement.classList.remove('dark');
-                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.theme = 'light';
-            }
-            initializeCharts(isDark); // Re-initialize charts with correct colors
+            const totals = {
+                users: 0, usageSum: 0, engagementSum: 0,
+                postFreqSum: 0,
+                platform: {}, countryUsage: {}, growth: {}, content: {}, gender: { Male: 0, Female: 0 }, age: {}
+            };
+
+            filteredData.forEach(item => {
+                totals.users += item.users;
+                totals.usageSum += item.usage * item.users;
+                totals.engagementSum += item.engagement * item.users;
+                totals.postFreqSum += item.postFrequency * item.users;
+
+                totals.platform[item.platform] = (totals.platform[item.platform] || 0) + item.users;
+                totals.countryUsage[item.country] = totals.countryUsage[item.country] || { users: 0, usage: 0 };
+                totals.countryUsage[item.country].users += item.users;
+                totals.countryUsage[item.country].usage += item.usage * item.users;
+                totals.growth[item.year] = (totals.growth[item.year] || 0) + item.users;
+                Object.keys(item.content).forEach(c => { totals.content[c] = (totals.content[c] || 0) + (item.content[c] * item.users); });
+                totals.gender[item.gender] += item.users;
+                totals.age[item.age] = (totals.age[item.age] || 0) + item.users;
+            });
+
+            const safeDiv = (sum, count) => count > 0 ? sum / count : 0;
+
+            const avgUsage = safeDiv(totals.usageSum, totals.users);
+            const avgEngagement = safeDiv(totals.engagementSum, totals.users);
+            const avgPostFreq = safeDiv(totals.postFreqSum, totals.users);
+
+            Object.keys(totals.countryUsage).forEach(c => { totals.countryUsage[c] = safeDiv(totals.countryUsage[c].usage, totals.countryUsage[c].users); });
+            Object.keys(totals.content).forEach(c => { totals.content[c] = safeDiv(totals.content[c], totals.users); });
+
+            return {
+                totalUsers: totals.users, avgUsage: avgUsage, avgEngagement: avgEngagement,
+                avgPostFreq: avgPostFreq,
+                platformDist: totals.platform, countryUsage: totals.countryUsage, growthData: totals.growth,
+                contentDist: totals.content, genderDist: totals.gender, ageDist: totals.age
+            };
         }
 
-        // Check for saved preference or system preference on load
+        // --- Update UI ---
+        function updateKPIs(aggregated) {
+            document.getElementById('totalUsers').textContent = aggregated ? `${aggregated.totalUsers.toFixed(1)}M` : '-- M';
+            document.getElementById('avgUsage').textContent = aggregated ? `${Math.floor(aggregated.avgUsage / 60)}h ${Math.round(aggregated.avgUsage % 60)}m` : '--h --m';
+            document.getElementById('engagementRate').textContent = aggregated ? `${aggregated.avgEngagement.toFixed(1)}%` : '--.-%';
+            document.getElementById('postFreq').textContent = aggregated ? `${aggregated.avgPostFreq.toFixed(1)}/day` : '--/day';
+            document.getElementById('totalUsersChange').innerHTML = '<i class="fas fa-minus mr-1"></i>--% YoY';
+            document.getElementById('avgUsageChange').innerHTML = '<i class="fas fa-minus mr-1"></i>vs Global Avg';
+            document.getElementById('engagementRateChange').innerHTML = '<i class="fas fa-minus mr-1"></i>--% QoQ';
+            document.getElementById('postFreqChange').innerHTML = '<i class="fas fa-minus mr-1"></i>--% MoM';
+        }
+
+        function updateCharts(aggregated) {
+            const isDark = htmlElement.classList.contains('dark');
+            const platformColors = ['#25D366', '#1877F2', '#000000', '#E4405F', '#FF0000', '#0A66C2'];
+            const countryColors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+            const contentColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
+            const ageColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
+
+            if (!aggregated) { Object.values(charts).forEach(chart => { chart.data.labels = []; chart.data.datasets.forEach(ds => ds.data = []); chart.update(); }); return; }
+
+            charts.platform.data.labels = Object.keys(aggregated.platformDist); charts.platform.data.datasets[0].data = Object.values(aggregated.platformDist); charts.platform.data.datasets[0].backgroundColor = platformColors.slice(0, charts.platform.data.labels.length); charts.platform.update();
+            charts.usage.data.labels = Object.keys(aggregated.countryUsage); charts.usage.data.datasets[0].data = Object.values(aggregated.countryUsage); charts.usage.data.datasets[0].backgroundColor = countryColors.slice(0, charts.usage.data.labels.length); charts.usage.update();
+            charts.growth.data.labels = Object.keys(aggregated.growthData).sort(); charts.growth.data.datasets[0].data = charts.growth.data.labels.map(year => aggregated.growthData[year]); charts.growth.update();
+            charts.content.data.labels = Object.keys(aggregated.contentDist); charts.content.data.datasets[0].data = Object.values(aggregated.contentDist); charts.content.data.datasets[0].backgroundColor = contentColors.slice(0, charts.content.data.labels.length); charts.content.update();
+            charts.gender.data.datasets[0].data = [aggregated.genderDist.Male || 0, aggregated.genderDist.Female || 0]; charts.gender.update();
+            charts.age.data.labels = Object.keys(aggregated.ageDist); charts.age.data.datasets[0].data = Object.values(aggregated.ageDist); charts.age.data.datasets[0].backgroundColor = ageColors.slice(0, charts.age.data.labels.length); charts.age.update();
+
+            const textColor = isDark ? '#d1d5db' : '#4b5563'; const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+            Object.values(charts).forEach(chart => { chart.options.plugins.legend.labels.color = textColor; if (chart.options.scales) { Object.keys(chart.options.scales).forEach(axis => { chart.options.scales[axis].ticks.color = textColor; chart.options.scales[axis].grid.color = gridColor; if(chart.options.scales[axis].pointLabels) chart.options.scales[axis].pointLabels.color = textColor; }); } chart.update(); });
+        }
+
+        function updateTable(filteredData) {
+            const tableBody = document.getElementById('summaryTableBody'); tableBody.innerHTML = '';
+            if (!filteredData || filteredData.length === 0) { tableBody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500 dark:text-gray-400">No data matches the selected filters.</td></tr>'; return; }
+            const topRows = filteredData.slice(0, 5);
+            topRows.forEach(item => { const row = document.createElement('tr'); row.className = 'hover:bg-gray-100 dark:hover:bg-gray-700'; row.innerHTML = `<td class="p-4 text-gray-900 dark:text-white">${item.country}</td><td class="p-4 text-gray-700 dark:text-gray-300">${item.platform}</td><td class="p-4 text-gray-700 dark:text-gray-300">${item.year}</td><td class="p-4 text-gray-700 dark:text-gray-300">${item.age}</td><td class="p-4 text-gray-700 dark:text-gray-300">${item.users.toFixed(1)}M</td><td class="p-4 text-gray-700 dark:text-gray-300">${item.usage}m</td>`; tableBody.appendChild(row); });
+        }
+
+        // --- Main Dashboard Update Function ---
+        function updateDashboard() {
+            const filters = { country: document.getElementById('countryFilter').value, platform: document.getElementById('platformFilter').value, year: document.getElementById('dateFilter').value, age: document.getElementById('demoFilter').value };
+            const filtered = filterData(baseData, filters);
+            const aggregated = aggregateData(filtered);
+            updateKPIs(aggregated);
+            updateCharts(aggregated);
+            updateTable(filtered);
+        }
+
+        // --- Dark Mode & Init ---
+        function applyDarkMode(isDark) {
+            if (isDark) { htmlElement.classList.add('dark'); darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>'; localStorage.theme = 'dark'; }
+            else { htmlElement.classList.remove('dark'); darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>'; localStorage.theme = 'light'; }
+            initializeCharts(isDark);
+            updateDashboard();
+        }
+
         const prefersDark = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        initializeCharts(prefersDark);
         applyDarkMode(prefersDark);
 
-        // Event listener for toggle button
-        darkModeToggle.addEventListener('click', () => {
-            applyDarkMode(!htmlElement.classList.contains('dark'));
-        });
-
-        // Filter Event listeners (same as before)
+        // --- Event listeners ---
+        darkModeToggle.addEventListener('click', () => { applyDarkMode(!htmlElement.classList.contains('dark')); });
         document.getElementById('countryFilter').addEventListener('change', updateDashboard);
         document.getElementById('platformFilter').addEventListener('change', updateDashboard);
         document.getElementById('dateFilter').addEventListener('change', updateDashboard);
         document.getElementById('demoFilter').addEventListener('change', updateDashboard);
-
-        // Initialize Heatmap and call updateDashboard once
-        generateHeatmap();
-        updateDashboard(); // Call once on load
 
     </script>
 </body>
