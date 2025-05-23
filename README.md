@@ -6,8 +6,8 @@ This project is a responsive web-based dashboard designed to display social medi
 It provides a comprehensive visualization of trends, user behavior patterns, and platform engagement using interactive charts and key performance indicators (KPIs). 
 The dashboard is built with HTML, Tailwind CSS, and Chart.js.
 ChatGpt Prompt:
-Give me a project to work on, to test my data analysis knowledge.I would love to create a dashboard, filtering, etc
-FineTuned with Deepseek and Gemini.
+"Give me a project to work on, to test my data analysis knowledge.I would love to create a dashboard, filtering, etc"
+Results and Code were FineTuned with Deepseek and Gemini.
 
 ## ✨ Features
 
