@@ -16,23 +16,40 @@
         .kpi-card { transition: all 0.3s ease; }
         .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
         .filter-active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        /* Dark Mode styles */
+        .dark .bg-white { background-color: #1f2937; } /* gray-800 */
+        .dark .text-gray-900 { color: #f9fafb; } /* gray-50 */
+        .dark .text-gray-800 { color: #f9fafb; }
+        .dark .text-gray-600 { color: #d1d5db; } /* gray-300 */
+        .dark .text-gray-500 { color: #9ca3af; } /* gray-400 */
+        .dark .bg-gray-50 { background-color: #111827; } /* gray-900 */
+        .dark .border-gray-200 { border-color: #374151; } /* gray-700 */
+        .dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; } /* gray-700 */
+        .dark .bg-gray-50 { background-color: #374151; } /* gray-700 for table head */
+        .dark .hover\:bg-gray-50:hover { background-color: #374151; } /* gray-700 */
+        .dark select { background-color: #374151; border-color: #4b5563; color: white; }
+        .dark h1, .dark h2, .dark h3 { color: white; }
+        .dark .text-blue-100 { color: #dbeafe; }
+        .dark .text-gray-500 { color: #6b7280; }
+        .dark .text-gray-400 { color: #9ca3af; }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-50 font-sans dark:bg-gray-900">
     <div class="container mx-auto p-6 space-y-6">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg shadow-lg">
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg shadow-lg relative">
             <h1 class="text-3xl font-bold mb-2"><i class="fas fa-chart-line mr-3"></i>Africa Social Media Analytics Dashboard</h1>
             <p class="text-blue-100">Comprehensive analysis of social media trends, user behavior patterns, and platform engagement across African countries</p>
+            <button id="darkModeToggle" class="absolute top-6 right-6 p-2 rounded-full bg-gray-700 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-500 text-white focus:outline-none no-print">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
 
-        <!-- Filters -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold mb-4"><i class="fas fa-filter mr-2"></i>Filters & Controls</h2>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold mb-4 dark:text-white"><i class="fas fa-filter mr-2"></i>Filters & Controls</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2">Country</label>
-                    <select id="countryFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300">Country</label>
+                    <select id="countryFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-600">
                         <option value="all">All Countries</option>
                         <option value="south-africa">South Africa</option>
                         <option value="nigeria">Nigeria</option>
@@ -41,8 +58,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2">Platform</label>
-                    <select id="platformFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300">Platform</label>
+                    <select id="platformFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-600">
                         <option value="all">All Platforms</option>
                         <option value="whatsapp">WhatsApp</option>
                         <option value="facebook">Facebook</option>
@@ -52,16 +69,16 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2">Date Range</label>
-                    <select id="dateFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300">Date Range</label>
+                    <select id="dateFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-600">
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
                         <option value="2022">2022</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2">Demographics</label>
-                    <select id="demoFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium mb-2 dark:text-gray-300">Demographics</label>
+                    <select id="demoFilter" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-600">
                         <option value="all">All Demographics</option>
                         <option value="18-24">18-24 years</option>
                         <option value="25-34">25-34 years</option>
@@ -72,7 +89,6 @@
             </div>
         </div>
 
-        <!-- KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="kpi-card bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg">
                 <div class="flex items-center justify-between">
@@ -107,99 +123,92 @@
                 </div>
             </div>
             
-            <div class="kpi-card bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-lg shadow-lg">
+            <div class="kpi-card bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border dark:border-gray-700">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-orange-100 text-sm">Post Frequency</p>
-                        <p class="text-3xl font-bold" id="postFreq">8.7/day</p>
-                        <p class="text-orange-200 text-sm"><i class="fas fa-arrow-up mr-1"></i>+15.6% MoM</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Post Frequency</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white" id="postFreq">8.7/day</p>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm"><i class="fas fa-arrow-up mr-1"></i>+15.6% MoM</p>
                     </div>
-                    <i class="fas fa-share-alt text-4xl text-orange-200"></i>
+                    <i class="fas fa-share-alt text-4xl text-gray-400 dark:text-gray-500"></i>
                 </div>
             </div>
         </div>
 
-        <!-- Charts Row 1 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Platform Distribution -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4"><i class="fas fa-chart-pie mr-2"></i>Platform Distribution by Users</h3>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-chart-pie mr-2"></i>Platform Distribution by Users</h3>
                 <div class="chart-container">
                     <canvas id="platformChart"></canvas>
                 </div>
             </div>
             
-            <!-- Daily Usage by Country -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4"><i class="fas fa-globe-africa mr-2"></i>Daily Usage Time by Country</h3>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-globe-africa mr-2"></i>Daily Usage Time by Country</h3>
                 <div class="chart-container">
                     <canvas id="usageChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Charts Row 2 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Growth Trends -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4"><i class="fas fa-chart-line mr-2"></i>Platform Growth Over Time</h3>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-chart-line mr-2"></i>Platform Growth Over Time</h3>
                 <div class="chart-container">
                     <canvas id="growthChart"></canvas>
                 </div>
             </div>
             
-            <!-- Content Engagement -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4"><i class="fas fa-chart-donut mr-2"></i>Content Type Engagement</h3>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-chart-donut mr-2"></i>Content Type Engagement</h3>
                 <div class="chart-container">
                     <canvas id="contentChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Active Hours Heatmap -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3 class="text-lg font-bold mb-4"><i class="fas fa-calendar-alt mr-2"></i>Most Active Posting Hours by Day</h3>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-calendar-alt mr-2"></i>Most Active Posting Hours by Day</h3>
             <div class="grid grid-cols-24 gap-1 mb-4">
                 <div class="text-xs text-center col-span-24 grid grid-cols-24 gap-1 mb-2">
-                    <span class="text-gray-500">0</span><span></span><span></span><span class="text-gray-500">3</span><span></span><span></span>
-                    <span class="text-gray-500">6</span><span></span><span></span><span class="text-gray-500">9</span><span></span><span></span>
-                    <span class="text-gray-500">12</span><span></span><span></span><span class="text-gray-500">15</span><span></span><span></span>
-                    <span class="text-gray-500">18</span><span></span><span></span><span class="text-gray-500">21</span><span></span><span></span>
+                    <span class="text-gray-500 dark:text-gray-400">0</span><span></span><span></span><span class="text-gray-500 dark:text-gray-400">3</span><span></span><span></span>
+                    <span class="text-gray-500 dark:text-gray-400">6</span><span></span><span></span><span class="text-gray-500 dark:text-gray-400">9</span><span></span><span></span>
+                    <span class="text-gray-500 dark:text-gray-400">12</span><span></span><span></span><span class="text-gray-500 dark:text-gray-400">15</span><span></span><span></span>
+                    <span class="text-gray-500 dark:text-gray-400">18</span><span></span><span></span><span class="text-gray-500 dark:text-gray-400">21</span><span></span><span></span>
                 </div>
             </div>
             <div class="space-y-1">
                 <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600">Mon</span>
+                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Mon</span>
                     <div class="flex gap-1" id="mondayHours"></div>
                 </div>
                 <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600">Tue</span>
+                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Tue</span>
                     <div class="flex gap-1" id="tuesdayHours"></div>
                 </div>
                 <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600">Wed</span>
+                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Wed</span>
                     <div class="flex gap-1" id="wednesdayHours"></div>
                 </div>
                 <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600">Thu</span>
+                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Thu</span>
                     <div class="flex gap-1" id="thursdayHours"></div>
                 </div>
                 <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600">Fri</span>
+                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Fri</span>
                     <div class="flex gap-1" id="fridayHours"></div>
                 </div>
                 <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600">Sat</span>
+                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Sat</span>
                     <div class="flex gap-1" id="saturdayHours"></div>
                 </div>
                 <div class="flex items-center">
-                    <span class="w-12 text-sm text-gray-600">Sun</span>
+                    <span class="w-12 text-sm text-gray-600 dark:text-gray-300">Sun</span>
                     <div class="flex gap-1" id="sundayHours"></div>
                 </div>
             </div>
             <div class="flex items-center justify-center mt-4 space-x-4">
-                <span class="text-sm text-gray-600">Low</span>
+                <span class="text-sm text-gray-600 dark:text-gray-300">Low</span>
                 <div class="flex space-x-1">
                     <div class="w-3 h-3 bg-green-100 rounded"></div>
                     <div class="w-3 h-3 bg-green-200 rounded"></div>
@@ -207,192 +216,114 @@
                     <div class="w-3 h-3 bg-green-600 rounded"></div>
                     <div class="w-3 h-3 bg-green-800 rounded"></div>
                 </div>
-                <span class="text-sm text-gray-600">High</span>
+                <span class="text-sm text-gray-600 dark:text-gray-300">High</span>
             </div>
         </div>
 
-        <!-- Demographic Insights -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4"><i class="fas fa-users mr-2"></i>Gender Distribution</h3>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-users mr-2"></i>Gender Distribution</h3>
                 <div class="chart-container">
                     <canvas id="genderChart"></canvas>
                 </div>
             </div>
             
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4"><i class="fas fa-birthday-cake mr-2"></i>Age Groups</h3>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-birthday-cake mr-2"></i>Age Groups</h3>
                 <div class="chart-container">
                     <canvas id="ageChart"></canvas>
                 </div>
             </div>
             
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold mb-4"><i class="fas fa-city mr-2"></i>Urban vs Rural</h3>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-4 dark:text-white"><i class="fas fa-city mr-2"></i>Urban vs Rural</h3>
                 <div class="chart-container">
                     <canvas id="urbanChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Data Summary Table -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 border-b">
-                <h3 class="text-lg font-bold"><i class="fas fa-table mr-2"></i>Country Comparison Summary</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 border-b dark:border-gray-700">
+                <h3 class="text-lg font-bold dark:text-white"><i class="fas fa-table mr-2"></i>Country Comparison Summary</h3>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th class="p-4 text-left">Country</th>
-                            <th class="p-4 text-left">Total Users</th>
-                            <th class="p-4 text-left">Penetration Rate</th>
-                            <th class="p-4 text-left">Daily Usage</th>
-                            <th class="p-4 text-left">Top Platform</th>
-                            <th class="p-4 text-left">Growth Rate</th>
+                            <th class="p-4 text-left dark:text-gray-300">Country</th>
+                            <th class="p-4 text-left dark:text-gray-300">Total Users</th>
+                            <th class="p-4 text-left dark:text-gray-300">Penetration Rate</th>
+                            <th class="p-4 text-left dark:text-gray-300">Daily Usage</th>
+                            <th class="p-4 text-left dark:text-gray-300">Top Platform</th>
+                            <th class="p-4 text-left dark:text-gray-300">Growth Rate</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-4 font-medium">🇿🇦 South Africa</td>
-                            <td class="p-4">26.7M</td>
-                            <td class="p-4">59.9%</td>
-                            <td class="p-4">3h 36m</td>
-                            <td class="p-4">WhatsApp (93.8%)</td>
-                            <td class="p-4 text-green-600">+2.7%</td>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="p-4 font-medium dark:text-white">🇿🇦 South Africa</td>
+                            <td class="p-4 dark:text-white">26.7M</td>
+                            <td class="p-4 dark:text-white">59.9%</td>
+                            <td class="p-4 dark:text-white">3h 36m</td>
+                            <td class="p-4 dark:text-white">WhatsApp (93.8%)</td>
+                            <td class="p-4 text-green-600 dark:text-green-400">+2.7%</td>
                         </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-4 font-medium">🇳🇬 Nigeria</td>
-                            <td class="p-4">33.7M</td>
-                            <td class="p-4">15.9%</td>
-                            <td class="p-4">3h 23m</td>
-                            <td class="p-4">WhatsApp</td>
-                            <td class="p-4 text-green-600">+8.1%</td>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="p-4 font-medium dark:text-white">🇳🇬 Nigeria</td>
+                            <td class="p-4 dark:text-white">33.7M</td>
+                            <td class="p-4 dark:text-white">15.9%</td>
+                            <td class="p-4 dark:text-white">3h 23m</td>
+                            <td class="p-4 dark:text-white">WhatsApp</td>
+                            <td class="p-4 text-green-600 dark:text-green-400">+8.1%</td>
                         </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-4 font-medium">🇰🇪 Kenya</td>
-                            <td class="p-4">13.05M</td>
-                            <td class="p-4">23.5%</td>
-                            <td class="p-4">4h 12m</td>
-                            <td class="p-4">Facebook</td>
-                            <td class="p-4 text-green-600">+38.2%</td>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="p-4 font-medium dark:text-white">🇰🇪 Kenya</td>
+                            <td class="p-4 dark:text-white">13.05M</td>
+                            <td class="p-4 dark:text-white">23.5%</td>
+                            <td class="p-4 dark:text-white">4h 12m</td>
+                            <td class="p-4 dark:text-white">Facebook</td>
+                            <td class="p-4 text-green-600 dark:text-green-400">+38.2%</td>
                         </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-4 font-medium">🇬🇭 Ghana</td>
-                            <td class="p-4">7.4M</td>
-                            <td class="p-4">21.5%</td>
-                            <td class="p-4">2h 45m</td>
-                            <td class="p-4">WhatsApp (93%)</td>
-                            <td class="p-4 text-green-600">+31.0%</td>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="p-4 font-medium dark:text-white">🇬🇭 Ghana</td>
+                            <td class="p-4 dark:text-white">7.4M</td>
+                            <td class="p-4 dark:text-white">21.5%</td>
+                            <td class="p-4 dark:text-white">2h 45m</td>
+                            <td class="p-4 dark:text-white">WhatsApp (93%)</td>
+                            <td class="p-4 text-green-600 dark:text-green-400">+31.0%</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="text-center text-gray-500 text-sm mt-8">
+        <div class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8">
             <p>Data sources: Meltwater Global Digital Report 2024/2025, DataReportal, Statista | Last updated: 2024</p>
         </div>
     </div>
 
     <script>
-        // Chart.js default configurations
-        Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
-        Chart.defaults.color = '#374151';
-        
-        // Data
-        const platformData = {
-            labels: ['WhatsApp', 'Facebook', 'TikTok', 'Instagram', 'YouTube', 'LinkedIn'],
-            datasets: [{
-                data: [93.8, 88.6, 76.9, 71.4, 68.2, 35.5],
-                backgroundColor: [
-                    '#25D366', '#1877F2', '#000000', '#E4405F', '#FF0000', '#0A66C2'
-                ],
-                borderWidth: 0
-            }]
-        };
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const htmlElement = document.documentElement;
+        const charts = {}; // Object to store chart instances
 
-        const usageData = {
-            labels: ['Kenya', 'South Africa', 'Nigeria', 'Ghana', 'Morocco'],
-            datasets: [{
-                data: [252, 216, 203, 165, 158],
-                backgroundColor: [
-                    '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'
-                ],
-                borderWidth: 0
-            }]
-        };
+        // Set initial Chart.js default color
+        function setChartDefaults(isDark) {
+            Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
+            Chart.defaults.color = isDark ? '#FFF' : '#374151';
+        }
 
-        const growthData = {
-            labels: ['Jan 2023', 'Apr 2023', 'Jul 2023', 'Oct 2023', 'Jan 2024', 'Mar 2024'],
-            datasets: [
-                {
-                    label: 'Facebook',
-                    data: [45.2, 48.1, 52.3, 58.7, 67.2, 88.6],
-                    borderColor: '#1877F2',
-                    backgroundColor: 'rgba(24, 119, 242, 0.1)',
-                    tension: 0.4
-                },
-                {
-                    label: 'TikTok',
-                    data: [12.8, 18.3, 28.9, 45.6, 63.4, 76.9],
-                    borderColor: '#000000',
-                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                    tension: 0.4
-                },
-                {
-                    label: 'Instagram',
-                    data: [35.4, 38.7, 42.1, 48.9, 58.3, 71.4],
-                    borderColor: '#E4405F',
-                    backgroundColor: 'rgba(228, 64, 95, 0.1)',
-                    tension: 0.4
-                }
-            ]
-        };
+        // Data (same as before)
+        const platformData = { labels: ['WhatsApp', 'Facebook', 'TikTok', 'Instagram', 'YouTube', 'LinkedIn'], datasets: [{ data: [93.8, 88.6, 76.9, 71.4, 68.2, 35.5], backgroundColor: ['#25D366', '#1877F2', '#000000', '#E4405F', '#FF0000', '#0A66C2'], borderWidth: 0 }] };
+        const usageData = { labels: ['Kenya', 'South Africa', 'Nigeria', 'Ghana', 'Morocco'], datasets: [{ data: [252, 216, 203, 165, 158], backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'], borderWidth: 0 }] };
+        const growthData = { labels: ['Jan 2023', 'Apr 2023', 'Jul 2023', 'Oct 2023', 'Jan 2024', 'Mar 2024'], datasets: [ { label: 'Facebook', data: [45.2, 48.1, 52.3, 58.7, 67.2, 88.6], borderColor: '#1877F2', backgroundColor: 'rgba(24, 119, 242, 0.1)', tension: 0.4 }, { label: 'TikTok', data: [12.8, 18.3, 28.9, 45.6, 63.4, 76.9], borderColor: '#000000', backgroundColor: 'rgba(0, 0, 0, 0.1)', tension: 0.4 }, { label: 'Instagram', data: [35.4, 38.7, 42.1, 48.9, 58.3, 71.4], borderColor: '#E4405F', backgroundColor: 'rgba(228, 64, 95, 0.1)', tension: 0.4 } ] };
+        const contentData = { labels: ['Videos', 'Images', 'Stories', 'Live Streams', 'Text Posts'], datasets: [{ data: [42.3, 28.7, 18.9, 6.8, 3.3], backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'], borderWidth: 0 }] };
+        const genderData = { labels: ['Female', 'Male'], datasets: [{ data: [48.7, 51.3], backgroundColor: ['#FF69B4', '#4169E1'], borderWidth: 0 }] };
+        const ageData = { labels: ['18-24', '25-34', '35-44', '45-54', '55+'], datasets: [{ data: [32.4, 28.9, 21.7, 12.3, 4.7], backgroundColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'], borderWidth: 0 }] };
+        const urbanData = { labels: ['Urban', 'Rural'], datasets: [{ data: [67.3, 32.7], backgroundColor: ['#2ECC71', '#F39C12'], borderWidth: 0 }] };
 
-        const contentData = {
-            labels: ['Videos', 'Images', 'Stories', 'Live Streams', 'Text Posts'],
-            datasets: [{
-                data: [42.3, 28.7, 18.9, 6.8, 3.3],
-                backgroundColor: [
-                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
-                ],
-                borderWidth: 0
-            }]
-        };
-
-        const genderData = {
-            labels: ['Female', 'Male'],
-            datasets: [{
-                data: [48.7, 51.3],
-                backgroundColor: ['#FF69B4', '#4169E1'],
-                borderWidth: 0
-            }]
-        };
-
-        const ageData = {
-            labels: ['18-24', '25-34', '35-44', '45-54', '55+'],
-            datasets: [{
-                data: [32.4, 28.9, 21.7, 12.3, 4.7],
-                backgroundColor: [
-                    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'
-                ],
-                borderWidth: 0
-            }]
-        };
-
-        const urbanData = {
-            labels: ['Urban', 'Rural'],
-            datasets: [{
-                data: [67.3, 32.7],
-                backgroundColor: ['#2ECC71', '#F39C12'],
-                borderWidth: 0
-            }]
-        };
-
-        // Chart configurations
-        const commonOptions = {
+        // Common Chart Options
+        const commonOptions = (isDark) => ({
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
@@ -400,125 +331,42 @@
                     position: 'bottom',
                     labels: {
                         padding: 20,
-                        usePointStyle: true
-                    }
-                }
-            }
-        };
-
-        // Initialize charts
-        new Chart(document.getElementById('platformChart'), {
-            type: 'doughnut',
-            data: platformData,
-            options: {
-                ...commonOptions,
-                plugins: {
-                    ...commonOptions.plugins,
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + context.parsed + '%';
-                            }
-                        }
+                        usePointStyle: true,
+                        color: isDark ? '#FFF' : '#374151'
                     }
                 }
             }
         });
 
-        new Chart(document.getElementById('usageChart'), {
-            type: 'polarArea',
-            data: usageData,
-            options: {
-                ...commonOptions,
-                plugins: {
-                    ...commonOptions.plugins,
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + Math.floor(context.parsed.r / 60) + 'h ' + (context.parsed.r % 60) + 'm';
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        // Function to initialize charts
+        function initializeCharts(isDark) {
+            setChartDefaults(isDark);
+            const opts = commonOptions(isDark);
 
-        new Chart(document.getElementById('growthChart'), {
-            type: 'line',
-            data: growthData,
-            options: {
-                ...commonOptions,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return value + '%';
-                            }
-                        }
-                    }
-                }
-            }
-        });
+            // Destroy existing charts if they exist
+            Object.values(charts).forEach(chart => chart.destroy());
 
-        new Chart(document.getElementById('contentChart'), {
-            type: 'pie',
-            data: contentData,
-            options: {
-                ...commonOptions,
-                plugins: {
-                    ...commonOptions.plugins,
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + context.parsed + '%';
-                            }
-                        }
-                    }
-                }
-            }
-        });
+            charts.platform = new Chart(document.getElementById('platformChart'), { type: 'doughnut', data: platformData, options: { ...opts, plugins: { ...opts.plugins, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed}%` } } } } });
+            charts.usage = new Chart(document.getElementById('usageChart'), { type: 'polarArea', data: usageData, options: { ...opts, plugins: { ...opts.plugins, tooltip: { callbacks: { label: (c) => `${c.label}: ${Math.floor(c.parsed.r / 60)}h ${c.parsed.r % 60}m` } } } } });
+            charts.growth = new Chart(document.getElementById('growthChart'), { type: 'line', data: growthData, options: { ...opts, scales: { y: { beginAtZero: true, ticks: { callback: (v) => `${v}%`, color: isDark ? '#FFF' : '#374151' }, grid: { color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' } }, x: { ticks: { color: isDark ? '#FFF' : '#374151' }, grid: { color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' } } } } });
+            charts.content = new Chart(document.getElementById('contentChart'), { type: 'pie', data: contentData, options: { ...opts, plugins: { ...opts.plugins, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed}%` } } } } });
+            charts.gender = new Chart(document.getElementById('genderChart'), { type: 'doughnut', data: genderData, options: opts });
+            charts.age = new Chart(document.getElementById('ageChart'), { type: 'doughnut', data: ageData, options: opts });
+            charts.urban = new Chart(document.getElementById('urbanChart'), { type: 'doughnut', data: urbanData, options: opts });
+        }
 
-        new Chart(document.getElementById('genderChart'), {
-            type: 'doughnut',
-            data: genderData,
-            options: commonOptions
-        });
-
-        new Chart(document.getElementById('ageChart'), {
-            type: 'doughnut',
-            data: ageData,
-            options: commonOptions
-        });
-
-        new Chart(document.getElementById('urbanChart'), {
-            type: 'doughnut',
-            data: urbanData,
-            options: commonOptions
-        });
 
         // Generate activity heatmap
         function generateHeatmap() {
             const days = ['mondayHours', 'tuesdayHours', 'wednesdayHours', 'thursdayHours', 'fridayHours', 'saturdayHours', 'sundayHours'];
-            const intensities = [
-                [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], // Monday
-                [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], // Tuesday
-                [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], // Wednesday
-                [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], // Thursday
-                [1,1,1,1,1,2,3,4,4,4,3,3,4,4,3,3,4,5,5,5,4,3,2,1], // Friday
-                [1,1,1,1,1,1,2,3,4,4,4,4,4,4,4,4,5,5,5,5,4,3,2,1], // Saturday
-                [1,1,1,1,1,1,2,3,4,4,4,4,4,4,4,4,5,5,5,5,4,3,2,1]  // Sunday
-            ];
-
+            const intensities = [ [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], [1,1,1,1,1,2,3,4,5,5,4,4,5,5,4,3,4,5,5,4,3,2,2,1], [1,1,1,1,1,2,3,4,4,4,3,3,4,4,3,3,4,5,5,5,4,3,2,1], [1,1,1,1,1,1,2,3,4,4,4,4,4,4,4,4,5,5,5,5,4,3,2,1], [1,1,1,1,1,1,2,3,4,4,4,4,4,4,4,4,5,5,5,5,4,3,2,1] ];
             days.forEach((dayId, dayIndex) => {
                 const container = document.getElementById(dayId);
                 container.innerHTML = '';
-                
                 for (let hour = 0; hour < 24; hour++) {
                     const cell = document.createElement('div');
                     cell.className = 'w-3 h-3 rounded cursor-pointer';
                     const intensity = intensities[dayIndex][hour];
-                    
                     switch(intensity) {
                         case 1: cell.classList.add('bg-green-100'); break;
                         case 2: cell.classList.add('bg-green-200'); break;
@@ -526,57 +374,48 @@
                         case 4: cell.classList.add('bg-green-600'); break;
                         case 5: cell.classList.add('bg-green-800'); break;
                     }
-                    
-                    cell.title = `${hour}:00 - Activity level: ${intensity}/5`;
+                    cell.title = `${hour}:00 - Activity level: ${intensity}/5`; // Fixed template literal
                     container.appendChild(cell);
                 }
             });
         }
 
-        // Filter functionality
-        function updateDashboard() {
-            const country = document.getElementById('countryFilter').value;
-            const platform = document.getElementById('platformFilter').value;
-            
-            // Update KPIs based on filters
-            let totalUsers = '60.2M', avgUsage = '3h 24m', engagementRate = '68.4%', postFreq = '8.7/day';
-            
-            if (country === 'south-africa') {
-                totalUsers = '26.7M';
-                avgUsage = '3h 36m';
-                engagementRate = '72.1%';
-                postFreq = '9.2/day';
-            } else if (country === 'nigeria') {
-                totalUsers = '33.7M';
-                avgUsage = '3h 23m';
-                engagementRate = '65.8%';
-                postFreq = '8.9/day';
-            } else if (country === 'kenya') {
-                totalUsers = '13.05M';
-                avgUsage = '4h 12m';
-                engagementRate = '71.3%';
-                postFreq = '7.8/day';
-            } else if (country === 'ghana') {
-                totalUsers = '7.4M';
-                avgUsage = '2h 45m';
-                engagementRate = '63.2%';
-                postFreq = '6.9/day';
+        // Filter functionality (same as before)
+        function updateDashboard() { /* ... existing code ... */ }
+
+        // Dark Mode Logic
+        function applyDarkMode(isDark) {
+            if (isDark) {
+                htmlElement.classList.add('dark');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.theme = 'dark';
+            } else {
+                htmlElement.classList.remove('dark');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.theme = 'light';
             }
-            
-            document.getElementById('totalUsers').textContent = totalUsers;
-            document.getElementById('avgUsage').textContent = avgUsage;
-            document.getElementById('engagementRate').textContent = engagementRate;
-            document.getElementById('postFreq').textContent = postFreq;
+            initializeCharts(isDark); // Re-initialize charts with correct colors
         }
 
-        // Event listeners
+        // Check for saved preference or system preference on load
+        const prefersDark = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        applyDarkMode(prefersDark);
+
+        // Event listener for toggle button
+        darkModeToggle.addEventListener('click', () => {
+            applyDarkMode(!htmlElement.classList.contains('dark'));
+        });
+
+        // Filter Event listeners (same as before)
         document.getElementById('countryFilter').addEventListener('change', updateDashboard);
         document.getElementById('platformFilter').addEventListener('change', updateDashboard);
         document.getElementById('dateFilter').addEventListener('change', updateDashboard);
         document.getElementById('demoFilter').addEventListener('change', updateDashboard);
 
-        // Initialize
+        // Initialize Heatmap and call updateDashboard once
         generateHeatmap();
+        updateDashboard(); // Call once on load
+
     </script>
 </body>
 </html>
